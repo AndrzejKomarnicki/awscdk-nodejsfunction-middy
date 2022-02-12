@@ -7,7 +7,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Debug local file",
+            "name": "Debug local file awslambda",
             "runtimeArgs": [
                 "-r",
                 "ts-node/register"
@@ -16,7 +16,7 @@
                 "${relativeFile}"
             ],
             "env": {
-                "AWS_REGION":"us-east-1",
+                "AWS_REGION":"us-east-1"
             }
 
         }
