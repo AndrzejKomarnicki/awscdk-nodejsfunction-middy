@@ -1,8 +1,8 @@
-import { SpaceStack } from './SpaceStack'
+import { MiddyStack } from './MiddyStack'
 import { App } from 'aws-cdk-lib'
 
 const app = new App()
-new SpaceStack(app, 'Space-finder', {
-    stackName:'SpaceFinder'
+new MiddyStack(app, 'Middy-Serverless', {
+    stackName:'MiddyServerless'
 
 })
