@@ -1,7 +1,7 @@
 {
-  "name": "space-finder-backend",
+  "name": "awscdk-nodejsfunction-middyjs",
   "version": "1.0.0",
-  "description": "",
+  "description": "Boilerplate for using AWS CDK v2 with NodejsFunction construct and MiddyJS middleware",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -18,6 +18,9 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
+    "@middy/core": "^2.5.7",
+    "@middy/http-error-handler": "^2.5.7",
+    "@middy/http-json-body-parser": "^2.5.7",
     "@types/aws-lambda": "^8.10.92",
     "@types/uuid": "^8.3.4",
     "aws-sdk": "^2.1069.0",

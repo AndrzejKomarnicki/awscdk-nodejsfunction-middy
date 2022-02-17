@@ -12,7 +12,7 @@ export class MiddyStack extends Stack {
         super(scope, id, props)
 
         const helloLambdaNodeJsMiddy = new NodejsFunction(this, 'helloLambdaNodeJsMiddy', {
-            entry: (join(__dirname, '..', 'services', 'node-lambda', 'hello.ts')),
+            entry: (join(__dirname, '..', 'services', 'node-lambda', 'handler.ts')),
             handler: 'handler'
         });
 
