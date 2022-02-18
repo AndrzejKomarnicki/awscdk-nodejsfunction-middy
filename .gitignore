@@ -105,3 +105,6 @@ dist
 
 #cdk generated files
 cdk.out
+
+#mac
+.DS_Store
