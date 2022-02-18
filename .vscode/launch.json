@@ -7,7 +7,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Debug local file awslambda",
+            "name": "Debug local file",
             "runtimeArgs": [
                 "-r",
                 "ts-node/register"
