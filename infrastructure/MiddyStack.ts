@@ -1,12 +1,11 @@
-import { Stack, StackProps } from 'aws-cdk-lib'
+import { CfnOutput, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib'
 import { Construct } from 'constructs';
 import { join } from 'path';
-import { LambdaIntegration, RestApi } from 'aws-cdk-lib/aws-apigateway'
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs'
+import { FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda';
+import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 
 export class MiddyStack extends Stack {
-
-    private api = new RestApi(this, 'MiddyApi');
 
     constructor(scope: Construct, id: string, props: StackProps) {
         super(scope, id, props)
@@ -16,10 +15,23 @@ export class MiddyStack extends Stack {
             handler: 'handler'
         });
 
-        // Hello Api lambda integration:
-        const helloLambdaIntegration = new LambdaIntegration(helloLambdaNodeJsMiddy)
-        const helloLambdaResource = this.api.root.addResource('hello')
-        helloLambdaResource.addMethod('GET', helloLambdaIntegration)
+        // Function URL
+        const fnurl = helloLambdaNodeJsMiddy.addFunctionUrl({
+            authType: FunctionUrlAuthType.NONE,
+            cors: {
+                allowedOrigins: ['*']
+            }
+        });
+
+        new LogGroup(this, 'MyLogGroup', {
+            logGroupName: "/aws/lambda/" + helloLambdaNodeJsMiddy.functionName,
+            retention: RetentionDays.ONE_WEEK,
+            removalPolicy: RemovalPolicy.DESTROY
+        })
+
+        new CfnOutput(this, 'FunctionURLCommand', {
+            value: `curl ${fnurl.url}`
+        });
     }
 
 }

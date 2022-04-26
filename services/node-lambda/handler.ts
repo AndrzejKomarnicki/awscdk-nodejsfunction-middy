@@ -13,7 +13,7 @@ const baseHandler = async (event: any, context: any) => {
 }
 
 const handler = middy(baseHandler)
-   .use(jsonBodyParser())
-   .use(httpErrorHandler())
+   .use(jsonBodyParser()) // parses the request body when it's a JSON and converts it to an object
+   .use(httpErrorHandler()) // handles common http errors and returns proper responses
 
-export { handler }
+export { handler } 

@@ -1,5 +1,5 @@
 
-@endpoint = "API Gateway Stage URL"
+@endpoint = "Function URL endpoint"
 
-GET {{endpoint}}/hello/
+GET {{endpoint}}
 ###
