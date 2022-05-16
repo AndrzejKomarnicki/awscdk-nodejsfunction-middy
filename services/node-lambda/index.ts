@@ -17,5 +17,3 @@ export const handler = middy(lambdaHandler)
   .use(jsonBodyParser())
   .use(httpSecurityHeaders())
   .use(httpErrorHandler())
-
-  exports.module = handler
