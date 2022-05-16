@@ -13,8 +13,9 @@ async function lambdaHandler (event: APIGatewayProxyEventV2): Promise<APIGateway
   }
 }
 
-export const handler = middy()
+export const handler = middy(lambdaHandler)
   .use(jsonBodyParser())
   .use(httpSecurityHeaders())
   .use(httpErrorHandler())
-  .handler(lambdaHandler)
+
+  exports.module = handler
