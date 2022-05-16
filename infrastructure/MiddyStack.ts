@@ -16,7 +16,7 @@ export class MiddyStack extends Stack {
             handler: 'handler',
             runtime: lambda.Runtime.NODEJS_16_X,
             memorySize: 1024,
-            timeout: Duration.seconds(5),
+            timeout: Duration.seconds(30),
             
             bundling: {
               minify: true
