@@ -1,7 +1,8 @@
-import { CfnOutput, RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib'
+import { CfnOutput, RemovalPolicy, Stack, StackProps, Duration } from 'aws-cdk-lib'
 import { Construct } from 'constructs';
 import { join } from 'path';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs'
+import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 
@@ -10,13 +11,20 @@ export class MiddyStack extends Stack {
     constructor(scope: Construct, id: string, props: StackProps) {
         super(scope, id, props)
 
-        const helloLambdaNodeJsMiddy = new NodejsFunction(this, 'helloLambdaNodeJsMiddy', {
-            entry: (join(__dirname, '..', 'services', 'node-lambda', 'handler.ts')),
-            handler: 'handler'
+        const LambdaNodeJsMiddy = new NodejsFunction(this, 'LambdaNodeJsMiddy', {
+            entry: (join(__dirname, '..', 'services', 'node-lambda', 'index.ts')),
+            handler: 'handler',
+            runtime: lambda.Runtime.NODEJS_16_X,
+            memorySize: 1024,
+            timeout: Duration.seconds(5),
+            
+            bundling: {
+              minify: true
+            },
         });
 
         // Function URL
-        const fnurl = helloLambdaNodeJsMiddy.addFunctionUrl({
+        const fnurl = LambdaNodeJsMiddy.addFunctionUrl({
             authType: FunctionUrlAuthType.NONE,
             cors: {
                 allowedOrigins: ['*']
@@ -24,7 +32,7 @@ export class MiddyStack extends Stack {
         });
 
         new LogGroup(this, 'MyLogGroup', {
-            logGroupName: "/aws/lambda/" + helloLambdaNodeJsMiddy.functionName,
+            logGroupName: "/aws/lambda/" + LambdaNodeJsMiddy.functionName,
             retention: RetentionDays.ONE_WEEK,
             removalPolicy: RemovalPolicy.DESTROY
         })
