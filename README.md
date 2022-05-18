@@ -6,10 +6,13 @@ It is recommended you modify your Function URL authentication type (NONE or IAM)
 
 ```javascript
 // Function URL - MiddyStack.ts
-const fnurl = helloLambdaNodeJsMiddy.addFunctionUrl({
+const fnurl = LambdaNodeJsMiddy.addFunctionUrl({
   authType: FunctionUrlAuthType.NONE,
   cors: {
     allowedOrigins: ['*'],
+    allowedMethods: [lambda.HttpMethod.ALL],
+    allowedHeaders: ['Content-Type'],
+    allowCredentials: true,
   },
 });
 ```
