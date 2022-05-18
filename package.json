@@ -19,10 +19,10 @@
     "typescript": "^4.5.4"
   },
   "dependencies": {
-    "@middy/core": "^3.0.2",
-    "@middy/http-error-handler": "^3.0.2",
-    "@middy/http-json-body-parser": "^3.0.2",
-    "@middy/http-security-headers": "^3.0.2",
+    "@middy/core": "^3.0.3",
+    "@middy/http-error-handler": "^3.0.3",
+    "@middy/http-json-body-parser": "^3.0.3",
+    "@middy/http-security-headers": "^3.0.3",
     "aws-sdk": "^2.1069.0"
   }
 }

@@ -33,7 +33,9 @@ export class MiddyStack extends Stack {
             cors: {
                 allowedOrigins: ['*'],
                 allowedMethods: [lambda.HttpMethod.ALL],
-                allowedHeaders: ['Content-Type']
+                allowedHeaders: ['Content-Type'],
+                allowCredentials: true,
+
             }
         });
 
