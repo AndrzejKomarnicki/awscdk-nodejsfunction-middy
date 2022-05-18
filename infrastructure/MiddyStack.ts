@@ -5,10 +5,6 @@ import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs'
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
-import { AllowedMethods } from 'aws-cdk-lib/aws-cloudfront';
-import { ALL } from 'dns';
-import { HttpMethod } from 'aws-cdk-lib/aws-events';
-import { HttpRequest } from 'aws-sdk';
 
 export class MiddyStack extends Stack {
 
