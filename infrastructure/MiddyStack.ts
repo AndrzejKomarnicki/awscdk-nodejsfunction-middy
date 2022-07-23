@@ -1,10 +1,11 @@
-import { CfnOutput, RemovalPolicy, Stack, StackProps, Duration } from 'aws-cdk-lib'
+import { CfnOutput, RemovalPolicy, Stack, StackProps, Duration, aws_codedeploy } from 'aws-cdk-lib'
 import { Construct } from 'constructs';
 import { join } from 'path';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs'
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
+
 
 export class MiddyStack extends Stack {
 
@@ -16,12 +17,26 @@ export class MiddyStack extends Stack {
             handler: 'handler',
             runtime: lambda.Runtime.NODEJS_16_X,
             memorySize: 1024,
-            timeout: Duration.seconds(30),
+            timeout: Duration.minutes(5),
             
             bundling: {
               minify: true
             },
         });
+
+        // used to make sure each CDK synthesis produces a different Version
+        const version = LambdaNodeJsMiddy.currentVersion;
+        const alias = new lambda.Alias(this, 'LambdaAlias', {
+        aliasName: 'Prod',
+         version,
+        });
+
+        new aws_codedeploy.LambdaDeploymentGroup(this, 'DeploymentGroup', {
+        alias,
+        deploymentConfig: aws_codedeploy.LambdaDeploymentConfig.LINEAR_10PERCENT_EVERY_1MINUTE,
+        });
+
+
 
         // Function URL
         const fnurl = LambdaNodeJsMiddy.addFunctionUrl({
