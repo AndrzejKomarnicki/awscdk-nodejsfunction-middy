@@ -32,9 +32,10 @@ export class MiddyStack extends Stack {
          version,
         });
 
+        // CodeDeploy deployment group and deployment config
         new aws_codedeploy.LambdaDeploymentGroup(this, 'DeploymentGroup', {
         alias,
-        deploymentConfig: aws_codedeploy.LambdaDeploymentConfig.LINEAR_10PERCENT_EVERY_1MINUTE,
+        deploymentConfig: aws_codedeploy.LambdaDeploymentConfig.ALL_AT_ONCE,
         });
 
 
@@ -51,6 +52,7 @@ export class MiddyStack extends Stack {
             }
         });
 
+        // Log Group for Function
         new LogGroup(this, 'MyLogGroup', {
             logGroupName: "/aws/lambda/" + LambdaNodeJsMiddy.functionName,
             retention: RetentionDays.ONE_WEEK,
