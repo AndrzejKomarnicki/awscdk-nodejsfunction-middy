@@ -1,4 +1,4 @@
-import { CfnOutput, RemovalPolicy, Stack, StackProps, Duration, aws_codedeploy } from 'aws-cdk-lib'
+import { CfnOutput, RemovalPolicy, Stack, StackProps, Duration, aws_codedeploy, Size } from 'aws-cdk-lib'
 import { Construct } from 'constructs';
 import { join } from 'path';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs'
@@ -19,7 +19,8 @@ export class MiddyStack extends Stack {
             memorySize: 1024,
             timeout: Duration.minutes(5),
             reservedConcurrentExecutions: 60,
-            
+            ephemeralStorageSize: Size.gibibytes(0.5),
+
             bundling: {
               minify: true
             },
