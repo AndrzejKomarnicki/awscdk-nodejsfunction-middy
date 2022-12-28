@@ -6,6 +6,10 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 
+import * as cdk from 'aws-cdk-lib';
+import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
+import * as cloudFront from 'aws-cdk-lib/aws-cloudfront';
+
 
 export class MiddyStack extends Stack {
 
@@ -22,24 +26,22 @@ export class MiddyStack extends Stack {
             ephemeralStorageSize: Size.gibibytes(0.5),
 
             bundling: {
-              minify: true
+                minify: true
             },
         });
 
         // used to make sure each CDK synthesis produces a different Version
         const version = LambdaNodeJsMiddy.currentVersion;
         const alias = new lambda.Alias(this, 'LambdaAlias', {
-        aliasName: 'Prod',
-         version,
+            aliasName: 'Prod',
+            version,
         });
 
         // CodeDeploy deployment group and deployment config
         new aws_codedeploy.LambdaDeploymentGroup(this, 'DeploymentGroup', {
-        alias,
-        deploymentConfig: aws_codedeploy.LambdaDeploymentConfig.ALL_AT_ONCE,
+            alias,
+            deploymentConfig: aws_codedeploy.LambdaDeploymentConfig.ALL_AT_ONCE,
         });
-
-
 
         // Function URL
         const fnurl = LambdaNodeJsMiddy.addFunctionUrl({
@@ -53,6 +55,36 @@ export class MiddyStack extends Stack {
             }
         });
 
+        // Create the cloudfront response header policy. 
+        // Sets the CORS rules to allow all methods and all origins. Restict as needed. 
+        const cfResponseHeadersPolicy = new cloudFront.ResponseHeadersPolicy(this, 'cfResponseHeadersPolicy',
+            {
+                responseHeadersPolicyName: 'lambdaFurlCloudFrontPolicy',
+                corsBehavior: {
+                    accessControlAllowCredentials: false,
+                    accessControlAllowHeaders: ['*'],
+                    accessControlAllowMethods: ["GET", "HEAD", "OPTIONS", "PUT", "PATCH", "POST", "DELETE"],
+                    accessControlAllowOrigins: ['*'],
+                    accessControlExposeHeaders: ['*'],
+                    accessControlMaxAge: Duration.seconds(600),
+                    originOverride: true
+                }
+            });
+
+        // CloudFront Distribution
+        // Set the origin as the lambda function url created in previous steps
+        const lambdaFurlCfd = new cloudFront.Distribution(this, 'lambdaFurlCloudfrontDist', {
+            defaultBehavior: {
+                origin: new origins.HttpOrigin(cdk.Fn.select(2, cdk.Fn.split("/", fnurl.url))),
+                allowedMethods: cloudFront.AllowedMethods.ALLOW_ALL,
+                viewerProtocolPolicy: cloudFront.ViewerProtocolPolicy.ALLOW_ALL,
+                originRequestPolicy: cloudFront.OriginRequestPolicy.CORS_CUSTOM_ORIGIN,
+                responseHeadersPolicy: cfResponseHeadersPolicy,
+                cachedMethods: cloudFront.CachedMethods.CACHE_GET_HEAD_OPTIONS
+            }
+        });
+
+
         // Log Group for Function
         new LogGroup(this, 'MyLogGroup', {
             logGroupName: "/aws/lambda/" + LambdaNodeJsMiddy.functionName,
@@ -61,7 +93,15 @@ export class MiddyStack extends Stack {
         })
 
         new CfnOutput(this, 'FunctionURLCommand', {
-            value: `curl ${fnurl.url}`
+            value: `curl ${fnurl.url}`,
+            description: "Function URL",
+            exportName: 'lambdaFurl'
+        });
+
+        new CfnOutput(this, 'cloudFrontURL', {
+            value: lambdaFurlCfd.distributionDomainName,
+            description: 'CloudFront URL for Distribution',
+            exportName: 'cloudFrontURL',
         });
     }
 
