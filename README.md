@@ -65,7 +65,7 @@ A middleware engine allows you to focus on the strict business logic of your Lam
 Currently the boilerplate handler comes equipped with the following:
 
 ```javascript
-const handler = middy(baseHandler)
+const handler = middy()
   .use(jsonBodyParser()) // parses the request body when it's a JSON and converts it to an object
   .use(httpSecurityHeaders()) // applies best practice security headers to responses. It's a simplified port of HelmetJS.
   .use(httpErrorHandler()) // handles common http errors and returns proper responses
@@ -80,7 +80,7 @@ https://middy.js.org/docs/category/middlewares
 ## +
 
 AWS CDK v2 NodejsFunction construct:
-https://docs.aws.amazon.com/cdk/api/v1/docs/aws-lambda-nodejs-readme.html
+https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda_nodejs-readme.html
 
 AWS Lambda Powertools for TypeScript
 https://awslabs.github.io/aws-lambda-powertools-typescript/latest/
