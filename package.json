@@ -1,6 +1,6 @@
 {
   "name": "awscdk-nodejsfunction-middyjs",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Boilerplate for using AWS CDK v2 with NodejsFunction construct and MiddyJS middleware",
   "main": "index.js",
   "scripts": {
