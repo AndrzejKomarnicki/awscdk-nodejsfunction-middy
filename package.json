@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@aws-lambda-powertools/logger": "^1.6.0",
+    "@aws-lambda-powertools/parameters": "^1.7.0-beta",
     "@middy/core": "^4.2.7",
     "@middy/http-error-handler": "^4.2.7",
     "@middy/http-json-body-parser": "^4.2.7",
