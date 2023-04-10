@@ -3,6 +3,7 @@ import { Construct } from 'constructs';
 import { join } from 'path';
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs'
 import * as lambda from 'aws-cdk-lib/aws-lambda';
+import * as iam from 'aws-cdk-lib/aws-iam';
 import { FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 
@@ -15,6 +16,12 @@ export class MiddyStack extends Stack {
 
     constructor(scope: Construct, id: string, props: StackProps) {
         super(scope, id, props)
+
+        // create a policy statement
+        const appConfigPolicy = new iam.PolicyStatement({
+            actions: ['appconfig:GetLatestConfiguration*', 'appconfig:StartConfigurationSession*'],
+            resources: ['arn:aws:appconfig:us-east-1:*:*:*'],
+        });
 
         const LambdaNodeJsMiddy = new NodejsFunction(this, 'LambdaNodeJsMiddy', {
             entry: (join(__dirname, '..', 'services', 'node-lambda', 'index.ts')),
@@ -29,6 +36,13 @@ export class MiddyStack extends Stack {
                 minify: true
             },
         });
+
+        // add the policy to the Function's role
+        LambdaNodeJsMiddy.role?.attachInlinePolicy(
+            new iam.Policy(this, 'appconfig-access-policy', {
+                statements: [appConfigPolicy],
+            })
+        )
 
         // used to make sure each CDK synthesis produces a different Version
         const version = LambdaNodeJsMiddy.currentVersion;

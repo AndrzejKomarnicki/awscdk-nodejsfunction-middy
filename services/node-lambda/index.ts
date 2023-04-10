@@ -5,6 +5,7 @@ import httpSecurityHeaders from '@middy/http-security-headers'
 import httpRouterHandler from '@middy/http-router'
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda'
 import { Logger, injectLambdaContext } from '@aws-lambda-powertools/logger'
+import { getAppConfig } from '@aws-lambda-powertools/parameters/appconfig';
 
 const logger = new Logger({
   logLevel: 'INFO',
@@ -15,6 +16,14 @@ async function getHandler(event: APIGatewayProxyEventV2, context: any): Promise<
   // the returned response will be checked against the type `APIGatewayProxyResultV2`
   logger.info('This is a INFO log with some context');
   console.log('event 👉', event);
+
+  // Retrieve a configuration, latest version
+  const config = await getAppConfig('my-configuration', {
+    environment: 'my-env',
+    application: 'my-app'
+  });
+  console.log(config);
+
   return {
     statusCode: 200,
     body: JSON.stringify(`Hello from ${event.rawPath}`)
@@ -30,6 +39,7 @@ async function postHandler(event: APIGatewayProxyEventV2, context: any): Promise
     body: (`Accepted: ${event.rawBody}`)
   }
 }
+
 
 // routes served by httpRouterHandler middleware
 // you can add more nested handlers for routes (method and path) as needed
