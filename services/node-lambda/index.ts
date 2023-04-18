@@ -46,7 +46,6 @@ const routes = [
   }
 ]
 
-
 export const handler = middy()
   .use(jsonBodyParser())
   .use(httpSecurityHeaders())

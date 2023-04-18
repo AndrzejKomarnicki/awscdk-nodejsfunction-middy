@@ -5,6 +5,7 @@ import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs'
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
+import { aws_wafv2 as wafv2 } from 'aws-cdk-lib';
 
 import * as cdk from 'aws-cdk-lib';
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
@@ -71,6 +72,39 @@ export class MiddyStack extends Stack {
                 }
             });
 
+        // Define WAF webACL with rules and defaults
+        // For CLOUDFRONT, you must create your WAFv2 resources in the US East (N. Virginia) Region, us-east-1.
+        const cfnWebACL = new wafv2.CfnWebACL(this, 'MyCDKWebAcl', {
+            defaultAction: {
+                allow: {}
+            },
+            scope: 'CLOUDFRONT',
+            visibilityConfig: {
+                cloudWatchMetricsEnabled: true,
+                metricName: 'MetricForWebACLCDK',
+                sampledRequestsEnabled: true,
+            },
+            name: 'MyCDKWebACL',
+            rules: [{
+                name: 'CRSRule',
+                priority: 0,
+                statement: {
+                    managedRuleGroupStatement: {
+                        name: 'AWSManagedRulesCommonRuleSet',
+                        vendorName: 'AWS'
+                    }
+                },
+                visibilityConfig: {
+                    cloudWatchMetricsEnabled: true,
+                    metricName: 'MetricForWebACLCDK-CRS',
+                    sampledRequestsEnabled: true,
+                },
+                overrideAction: {
+                    none: {}
+                },
+            }]
+        });
+
         // CloudFront Distribution
         // Set the origin as the lambda function url created in previous steps
         const lambdaFurlCfd = new cloudFront.Distribution(this, 'lambdaFurlCloudfrontDist', {
@@ -81,9 +115,10 @@ export class MiddyStack extends Stack {
                 originRequestPolicy: cloudFront.OriginRequestPolicy.CORS_CUSTOM_ORIGIN,
                 responseHeadersPolicy: cfResponseHeadersPolicy,
                 cachedMethods: cloudFront.CachedMethods.CACHE_GET_HEAD_OPTIONS
-            }
+            },
+            // associate webacl with cloudfront distribution
+            webAclId: cfnWebACL.attrArn
         });
-
 
         // Log Group for Function
         new LogGroup(this, 'MyLogGroup', {
