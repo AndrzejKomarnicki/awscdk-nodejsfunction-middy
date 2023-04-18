@@ -27,7 +27,7 @@ async function postHandler(event: APIGatewayProxyEventV2, context: any): Promise
   console.log('event 👉', event);
   return {
     statusCode: 200,
-    body: (`Accepted: ${event.rawBody}`)
+    body: JSON.stringify(event.body)
   }
 }
 
