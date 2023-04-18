@@ -1,8 +1,8 @@
 ## What is awscdk-nodejsfunction-middy
 
-This is a starter project for using AWS CDK v2 with the NodejsFunction construct and Middy middleware engine for AWS Lambda. It comes equipped with the Function URL feature for exposing your Lambdas to the internet without the need for Amazon API Gateway, CloudFront distribution support for the fnURL origin as well as @middy/http-router - which can route requests to nested handlers based on method and path of an http event.
+This is a starter project for using AWS CDK v2 with the NodejsFunction construct and Middy middleware engine for AWS Lambda. It comes equipped with the Function URL feature for exposing your Lambdas to the internet via HTTP(S) endpoints, CloudFront distribution support for the fnURL origin, WAF v2 enabled on the CloudFront distribution, as well as @middy/http-router - which can route requests to nested handlers based on method and path of an http event. Ideally, I'd recommend starting this deployment off in **us-east-1** and then trying other regions.
 
-I've also added AWS Lambda Powertools for TypeScript Logger.
+I've also added **AWS Lambda Powertools for TypeScript Logger**.
 
 - You may want to change the logging level from 'INFO' to 'DEBUG', 'WARN', or 'ERROR' as needed
 
@@ -28,7 +28,7 @@ You can also adjust your Node.js Lambda runtime config, reserved concurrency, st
 const LambdaNodeJsMiddy = new NodejsFunction(this, 'LambdaNodeJsMiddy', {
   entry: join(__dirname, '..', 'services', 'node-lambda', 'index.ts'),
   handler: 'handler',
-  runtime: lambda.Runtime.NODEJS_16_X,
+  runtime: lambda.Runtime.NODEJS_18_X,
   memorySize: 1024,
   timeout: Duration.minutes(5),
   reservedConcurrentExecutions: 60,
@@ -42,7 +42,7 @@ const LambdaNodeJsMiddy = new NodejsFunction(this, 'LambdaNodeJsMiddy', {
 
 - If you are experiencing issues when changing 'reservedConcurrentExecutions' check your AWS account quota limits, you may need to increase them through AWS Support
 
-CodeDeploy deployment config can also be tuned as needed.
+**CodeDeploy** deployment config can also be tuned as needed.
 
 ```javascript
 new aws_codedeploy.LambdaDeploymentGroup(this, 'DeploymentGroup', {
@@ -53,6 +53,10 @@ new aws_codedeploy.LambdaDeploymentGroup(this, 'DeploymentGroup', {
 
 DeploymentConfig options (CANARY and LINEAR):
 https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_codedeploy.LambdaDeploymentConfig.html
+
+### CloudFront with WAF
+
+This CDK Stack enables the WAF v2 **AWSManagedRulesCommonRuleSet** managed rule group and associates it with the CloudFront distribution. For CLOUDFRONT, you must create your WAFv2 resources in the US East (N. Virginia) Region, us-east-1.
 
 ## What is Middy
 
