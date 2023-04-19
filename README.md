@@ -1,10 +1,19 @@
 ## What is awscdk-nodejsfunction-middy
 
-This is a starter project for using AWS CDK v2 with the NodejsFunction construct and Middy middleware engine for AWS Lambda. It comes equipped with the Function URL feature for exposing your Lambdas to the internet via HTTP(S) endpoints, CloudFront distribution support for the fnURL origin, WAF v2 enabled on the CloudFront distribution, as well as @middy/http-router - which can route requests to nested handlers based on method and path of an http event. Ideally, I'd recommend starting this deployment off in **us-east-1** and then trying other regions.
+This is a batteries-included starter project for using AWS CDK v2 with the NodejsFunction construct and Middy middleware engine for AWS Lambda. It comes equipped with the following:
 
-I've also added **AWS Lambda Powertools for TypeScript Logger**.
+- Function URL feature for exposing your Lambdas to the internet via HTTP(S) endpoints
+- Lambda reserved concurrency and ephemeral storage config
+- CloudFront distribution support for the Function URL origin
+- WAF v2 enabled on the CloudFront distribution
+- AWS Lambda Powertools for TypeScript Logger
+- @Middy/http-router - which can route requests to nested handlers based on method and path of an http event
+- a number of Middy middleware including httpSecurityHeaders (based off Helmet.js)
+- AWS CodeDeploy deployment group
 
-- You may want to change the logging level from 'INFO' to 'DEBUG', 'WARN', or 'ERROR' as needed
+Ideally, I'd recommend starting this deployment off in **us-east-1** and then trying other regions.
+
+- You may want to change the AWS Lambda Powertools for TypeScript logging level from 'INFO' to 'DEBUG', 'WARN', or 'ERROR' as needed
 
 It is recommended you modify your Function URL authentication type (NONE or IAM) and CORS policy as needed (or CloudFront distribution if using that instead):
 
