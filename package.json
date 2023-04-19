@@ -1,7 +1,7 @@
 {
   "name": "awscdk-nodejsfunction-middyjs",
-  "version": "3.0.0",
-  "description": "Boilerplate for using AWS CDK v2 with NodejsFunction construct and MiddyJS middleware",
+  "version": "3.1.0",
+  "description": "Batteries-included boilerplate for using AWS CDK v2 with NodejsFunction construct and MiddyJS middleware",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
