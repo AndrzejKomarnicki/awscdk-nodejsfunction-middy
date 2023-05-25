@@ -9,21 +9,21 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/aws-lambda": "^8.10.114",
-    "@types/node": "^18.15.11",
-    "aws-cdk": "^2.74.0",
-    "aws-cdk-lib": "^2.74.0",
-    "constructs": "^10.1.306",
-    "esbuild": "^0.17.16",
+    "@types/aws-lambda": "^8.10.115",
+    "@types/node": "^18.16.14",
+    "aws-cdk": "^2.80.0",
+    "aws-cdk-lib": "^2.80.0",
+    "constructs": "^10.2.32",
+    "esbuild": "^0.17.19",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.4"
   },
   "dependencies": {
     "@aws-lambda-powertools/logger": "^1.8.0",
-    "@middy/core": "^4.3.1",
-    "@middy/http-error-handler": "^4.3.1",
-    "@middy/http-json-body-parser": "^4.3.1",
-    "@middy/http-router": "^4.3.1",
-    "@middy/http-security-headers": "^4.3.1"
+    "@middy/core": "^4.4.3",
+    "@middy/http-error-handler": "^4.4.3",
+    "@middy/http-json-body-parser": "^4.4.3",
+    "@middy/http-router": "^4.4.3",
+    "@middy/http-security-headers": "^4.4.3"
   }
 }
