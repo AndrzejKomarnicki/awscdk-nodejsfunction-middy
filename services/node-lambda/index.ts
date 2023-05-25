@@ -15,6 +15,7 @@ async function getHandler(event: APIGatewayProxyEventV2, context: any): Promise<
   // the returned response will be checked against the type `APIGatewayProxyResultV2`
   logger.info('This is a INFO log with some context');
   console.log('event 👉', event);
+
   return {
     statusCode: 200,
     body: JSON.stringify(`Hello from ${event.rawPath}`)
@@ -27,7 +28,7 @@ async function postHandler(event: APIGatewayProxyEventV2, context: any): Promise
   console.log('event 👉', event);
   return {
     statusCode: 200,
-    body: JSON.stringify(event.body)
+    body: JSON.stringify({ message: 'POST event submitted successfully', post: event.body }),
   }
 }
 
