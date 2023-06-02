@@ -25,7 +25,6 @@ export class MiddyStack extends Stack {
             timeout: Duration.minutes(5),
             reservedConcurrentExecutions: 60,
             ephemeralStorageSize: Size.gibibytes(0.5),
-
             bundling: {
                 minify: true
             },
@@ -52,8 +51,8 @@ export class MiddyStack extends Stack {
                 allowedMethods: [lambda.HttpMethod.ALL],
                 allowedHeaders: ['Content-Type'],
                 allowCredentials: true,
-
-            }
+            },
+            invokeMode: lambda.InvokeMode.BUFFERED
         });
 
         // Create the cloudfront response header policy. 
