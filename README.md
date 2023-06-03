@@ -3,6 +3,7 @@
 This is a batteries-included starter project for using AWS CDK v2 with the NodejsFunction construct and Middy middleware engine for AWS Lambda. It comes equipped with the following:
 
 - Function URL feature for exposing your Lambdas to the internet via HTTP(S) endpoints
+- Invoke mode support for Function URL: BUFFERED or RESPONSE_STREAM
 - Lambda reserved concurrency and ephemeral storage config
 - CloudFront distribution support for the Function URL origin
 - WAF v2 enabled on the CloudFront distribution
@@ -79,6 +80,8 @@ Currently the boilerplate handler comes equipped with the following:
 
 ```javascript
 const handler = middy()
+  .use(httpEventNormalizer()) // this middleware normalizes the API Gateway, ALB, Function URLs, and VPC Lattice events
+  .use(httpHeaderNormalizer()) // this middleware normalizes HTTP header names
   .use(jsonBodyParser()) // parses the request body when it's a JSON and converts it to an object
   .use(httpSecurityHeaders()) // applies best practice security headers to responses. It's a simplified port of HelmetJS.
   .use(httpErrorHandler()) // handles common http errors and returns proper responses

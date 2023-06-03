@@ -1,6 +1,7 @@
 import middy from '@middy/core'
 import jsonBodyParser from '@middy/http-json-body-parser'
 import httpEventNormalizer from '@middy/http-event-normalizer'
+import httpHeaderNormalizer from '@middy/http-header-normalizer'
 import httpErrorHandler from '@middy/http-error-handler'
 import httpSecurityHeaders from '@middy/http-security-headers'
 import httpRouterHandler from '@middy/http-router'
@@ -51,6 +52,7 @@ const routes = [
 
 export const handler = middy()
   .use(httpEventNormalizer())
+  .use(httpHeaderNormalizer())
   .use(jsonBodyParser())
   .use(httpSecurityHeaders())
   .use(httpErrorHandler())
