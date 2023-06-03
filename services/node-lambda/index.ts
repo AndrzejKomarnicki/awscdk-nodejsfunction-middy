@@ -1,10 +1,12 @@
 import middy from '@middy/core'
 import jsonBodyParser from '@middy/http-json-body-parser'
+import httpEventNormalizer from '@middy/http-event-normalizer'
 import httpErrorHandler from '@middy/http-error-handler'
 import httpSecurityHeaders from '@middy/http-security-headers'
 import httpRouterHandler from '@middy/http-router'
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda'
 import { Logger, injectLambdaContext } from '@aws-lambda-powertools/logger'
+
 
 const logger = new Logger({
   logLevel: 'INFO',
@@ -48,6 +50,7 @@ const routes = [
 ]
 
 export const handler = middy()
+  .use(httpEventNormalizer())
   .use(jsonBodyParser())
   .use(httpSecurityHeaders())
   .use(httpErrorHandler())
