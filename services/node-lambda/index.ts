@@ -20,7 +20,7 @@ async function getHandler(event: APIGatewayProxyEventV2, context: any): Promise<
 
   return {
     statusCode: 200,
-    body: JSON.stringify(`Hello from ${event.rawPath}`)
+    body: JSON.stringify({ message: 'GET event submitted successfully', get: event.pathParameters }),
   }
 }
 
