@@ -1,4 +1,5 @@
 import middy from '@middy/core'
+import ssm from '@middy/ssm'
 import jsonBodyParser from '@middy/http-json-body-parser'
 import httpEventNormalizer from '@middy/http-event-normalizer'
 import httpHeaderNormalizer from '@middy/http-header-normalizer'
@@ -8,7 +9,6 @@ import httpRouterHandler from '@middy/http-router'
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda'
 import { Logger, injectLambdaContext } from '@aws-lambda-powertools/logger'
 
-
 const logger = new Logger({
   logLevel: 'INFO',
   serviceName: 'middy-example-api',
@@ -16,8 +16,11 @@ const logger = new Logger({
 
 async function getHandler(event: APIGatewayProxyEventV2, context: any): Promise<APIGatewayProxyResultV2> {
   // the returned response will be checked against the type `APIGatewayProxyResultV2`
-  logger.info('This is a INFO log with some context');
-  console.log('event 👉', event);
+  // logger.info('This is a INFO log with some context');
+
+  // Access SSM Parameter value from context
+  const ssmparamvalue = context.MYPARAMETER
+  console.log(ssmparamvalue);
 
   return {
     statusCode: 200,
@@ -27,8 +30,8 @@ async function getHandler(event: APIGatewayProxyEventV2, context: any): Promise<
 
 async function postHandler(event: APIGatewayProxyEventV2, context: any): Promise<APIGatewayProxyResultV2> {
   // the returned response will be checked against the type `APIGatewayProxyResultV2`
-  logger.info('This is a INFO log with some context');
-  console.log('event 👉', event);
+  // logger.info('This is a INFO log with some context');
+
   return {
     statusCode: 200,
     body: JSON.stringify({ message: 'POST event submitted successfully', post: event.body }),
@@ -50,13 +53,22 @@ const routes = [
   }
 ]
 
+
 export const handler = middy()
+  .use(
+    ssm({
+      fetchData: {
+        MYPARAMETER: 'mySsmParameterName', // single value
+      },
+      setToContext: true,
+      cacheExpiry: 15 * 60 * 1000,
+    })
+  )
   .use(httpEventNormalizer())
   .use(httpHeaderNormalizer())
   .use(jsonBodyParser())
   .use(httpSecurityHeaders())
   .use(httpErrorHandler())
-  .use(injectLambdaContext(logger)) // Change to (logger, { logEvent: true }) to log the incoming event
+  .use(injectLambdaContext(logger, { logEvent: true })) // Change to {logEvent: false} to not log the incoming event
   .handler(httpRouterHandler(routes))
-
 

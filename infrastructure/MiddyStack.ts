@@ -6,6 +6,8 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { aws_wafv2 as wafv2 } from 'aws-cdk-lib';
+import { Secret } from 'aws-cdk-lib/aws-secretsmanager';
+import { StringParameter } from 'aws-cdk-lib/aws-ssm';
 
 import * as cdk from 'aws-cdk-lib';
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
@@ -17,6 +19,13 @@ export class MiddyStack extends Stack {
     constructor(scope: Construct, id: string, props: StackProps) {
         super(scope, id, props)
 
+        // Create SSM parameter
+        const parameter = new StringParameter(this, 'Parameter', {
+            parameterName: `mySsmParameterName`,
+            stringValue: 'mySsmParameterValue',
+        });
+
+        // Create Lambda Function
         const LambdaNodeJsMiddy = new NodejsFunction(this, 'LambdaNodeJsMiddy', {
             entry: (join(__dirname, '..', 'services', 'node-lambda', 'index.ts')),
             handler: 'handler',
@@ -29,6 +38,9 @@ export class MiddyStack extends Stack {
                 minify: true
             },
         });
+
+        // Grant Lambda read access to the SSM parameter
+        parameter.grantRead(LambdaNodeJsMiddy);
 
         // used to make sure each CDK synthesis produces a different Version
         const version = LambdaNodeJsMiddy.currentVersion;
