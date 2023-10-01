@@ -7,7 +7,8 @@ This is a batteries-included starter project for using AWS CDK v2 with the Nodej
 - Lambda reserved concurrency and ephemeral storage config
 - CloudFront distribution support for the Function URL origin
 - WAF v2 enabled on the CloudFront distribution
-- AWS Lambda Powertools for TypeScript Logger
+- Powertools for AWS Lambda (TypeScript) Idempotency with DynamoDB
+- Powertools for AWS Lambda (TypeScript) Logger
 - @Middy/http-router - which can route requests to nested handlers based on method and path of an http event
 - a number of Middy middleware including httpSecurityHeaders (based off Helmet.js)
 - AWS CodeDeploy deployment group

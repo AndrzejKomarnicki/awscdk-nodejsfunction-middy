@@ -6,17 +6,24 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import { FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda';
 import { LogGroup, RetentionDays } from 'aws-cdk-lib/aws-logs';
 import { aws_wafv2 as wafv2 } from 'aws-cdk-lib';
-import { Secret } from 'aws-cdk-lib/aws-secretsmanager';
+
+// import { Secret } from 'aws-cdk-lib/aws-secretsmanager';
 import { StringParameter } from 'aws-cdk-lib/aws-ssm';
+import { ITable } from 'aws-cdk-lib/aws-dynamodb';
 
 import * as cdk from 'aws-cdk-lib';
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
 import * as cloudFront from 'aws-cdk-lib/aws-cloudfront';
 
+interface MiddyStackProps extends StackProps {
+    idempotencyTable: ITable
+}
+
 
 export class MiddyStack extends Stack {
 
-    constructor(scope: Construct, id: string, props: StackProps) {
+
+    constructor(scope: Construct, id: string, props: MiddyStackProps) {
         super(scope, id, props)
 
         // Create SSM parameter
@@ -27,17 +34,23 @@ export class MiddyStack extends Stack {
 
         // Create Lambda Function
         const LambdaNodeJsMiddy = new NodejsFunction(this, 'LambdaNodeJsMiddy', {
-            entry: (join(__dirname, '..', 'services', 'node-lambda', 'index.ts')),
+            entry: (join(__dirname, '..', '..', 'services', 'node-lambda', 'index.ts')),
             handler: 'handler',
             runtime: lambda.Runtime.NODEJS_18_X,
             memorySize: 1024,
             timeout: Duration.minutes(5),
             reservedConcurrentExecutions: 60,
+            environment: {
+                IDEMPOTENCY_TABLE_NAME: props.idempotencyTable.tableName,
+            },
             ephemeralStorageSize: Size.gibibytes(0.5),
             bundling: {
                 minify: true
             },
         });
+
+        // Lambda permissions to DynamoDB for idempotency table
+        props.idempotencyTable.grantReadWriteData(LambdaNodeJsMiddy);
 
         // Grant Lambda read access to the SSM parameter
         parameter.grantRead(LambdaNodeJsMiddy);
