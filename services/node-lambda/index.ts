@@ -80,9 +80,14 @@ export const handler = middy()
     })
   )
   .use(httpEventNormalizer())
-  .use(httpHeaderNormalizer())
+  .use(
+    httpHeaderNormalizer({
+      canonical: false,
+      defaultHeaders: {},
+    })
+  )
   .use(jsonBodyParser())
-  .use(httpSecurityHeaders())
+  .use(httpSecurityHeaders({}))
   .use(httpErrorHandler())
   .use(
     makeHandlerIdempotent({
