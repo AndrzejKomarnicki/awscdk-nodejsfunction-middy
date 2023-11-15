@@ -37,12 +37,14 @@ export class MiddyStack extends Stack {
             entry: (join(__dirname, '..', '..', 'services', 'node-lambda', 'index.ts')),
             handler: 'handler',
             runtime: lambda.Runtime.NODEJS_18_X,
-            memorySize: 1024,
+            memorySize: 512,
+            architecture: lambda.Architecture.X86_64,
             timeout: Duration.minutes(5),
             reservedConcurrentExecutions: 60,
             environment: {
                 IDEMPOTENCY_TABLE_NAME: props.idempotencyTable.tableName,
             },
+            insightsVersion: lambda.LambdaInsightsVersion.VERSION_1_0_229_0,
             ephemeralStorageSize: Size.gibibytes(0.5),
             bundling: {
                 minify: true

@@ -40,7 +40,7 @@ const LambdaNodeJsMiddy = new NodejsFunction(this, 'LambdaNodeJsMiddy', {
   entry: join(__dirname, '..', 'services', 'node-lambda', 'index.ts'),
   handler: 'handler',
   runtime: lambda.Runtime.NODEJS_18_X,
-  memorySize: 1024,
+  memorySize: 512,
   timeout: Duration.minutes(5),
   reservedConcurrentExecutions: 60,
   ephemeralStorageSize: Size.gibibytes(0.5),
