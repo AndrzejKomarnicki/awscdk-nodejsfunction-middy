@@ -36,9 +36,9 @@ export class MiddyStack extends Stack {
         const LambdaNodeJsMiddy = new NodejsFunction(this, 'LambdaNodeJsMiddy', {
             entry: (join(__dirname, '..', '..', 'services', 'node-lambda', 'index.ts')),
             handler: 'handler',
-            runtime: lambda.Runtime.NODEJS_18_X,
-            memorySize: 512,
-            architecture: lambda.Architecture.X86_64,
+            runtime: lambda.Runtime.NODEJS_20_X,
+            memorySize: 3072,
+            architecture: lambda.Architecture.ARM_64,
             timeout: Duration.minutes(5),
             reservedConcurrentExecutions: 60,
             environment: {
@@ -57,11 +57,13 @@ export class MiddyStack extends Stack {
         // Grant Lambda read access to the SSM parameter
         parameter.grantRead(LambdaNodeJsMiddy);
 
-        // used to make sure each CDK synthesis produces a different Version
+        // used to make sure each CDK synthesis produces a different Version, 
+        // set desired provisioned concurrency
         const version = LambdaNodeJsMiddy.currentVersion;
         const alias = new lambda.Alias(this, 'LambdaAlias', {
             aliasName: 'Prod',
             version,
+            provisionedConcurrentExecutions: 0
         });
 
         // CodeDeploy deployment group and deployment config

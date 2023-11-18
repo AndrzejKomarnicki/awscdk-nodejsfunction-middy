@@ -86,7 +86,9 @@ export const handler = middy()
       defaultHeaders: {},
     })
   )
-  .use(jsonBodyParser())
+  .use(jsonBodyParser({
+    disableContentTypeError: true
+  }))
   .use(httpSecurityHeaders({}))
   .use(httpErrorHandler())
   .use(
