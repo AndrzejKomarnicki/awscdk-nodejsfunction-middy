@@ -12,6 +12,9 @@ This is a batteries-included starter project for using AWS CDK v2 with the Nodej
 - @Middy/http-router - which can route requests to nested handlers based on method and path of an http event
 - a number of Middy middleware including httpSecurityHeaders (based off Helmet.js)
 - AWS CodeDeploy deployment group
+- Lambda Insights layer
+- Provisioned concurrency config for alias
+- ARM64 or X86_64 archiitecture
 
 Ideally, I'd recommend starting this deployment off in **us-east-1** and then trying other regions.
 
@@ -35,16 +38,20 @@ const fnurl = LambdaNodeJsMiddy.addFunctionUrl({
 You can also adjust your Node.js Lambda runtime config, reserved concurrency, storage and bundling minification as necessary:
 
 ```javascript
-// NodeJSFunction - MiddyStack.ts
+// Create Lambda Function
 const LambdaNodeJsMiddy = new NodejsFunction(this, 'LambdaNodeJsMiddy', {
-  entry: join(__dirname, '..', 'services', 'node-lambda', 'index.ts'),
+  entry: join(__dirname, '..', '..', 'services', 'node-lambda', 'index.ts'),
   handler: 'handler',
-  runtime: lambda.Runtime.NODEJS_18_X,
-  memorySize: 512,
+  runtime: lambda.Runtime.NODEJS_20_X,
+  memorySize: 3072,
+  architecture: lambda.Architecture.ARM_64,
   timeout: Duration.minutes(5),
   reservedConcurrentExecutions: 60,
+  environment: {
+    IDEMPOTENCY_TABLE_NAME: props.idempotencyTable.tableName,
+  },
+  insightsVersion: lambda.LambdaInsightsVersion.VERSION_1_0_229_0,
   ephemeralStorageSize: Size.gibibytes(0.5),
-
   bundling: {
     minify: true,
   },
