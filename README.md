@@ -2,7 +2,7 @@
 
 This is a batteries-included starter project for using AWS CDK v2 with the NodejsFunction construct and Middy middleware engine for AWS Lambda. It comes equipped with the following:
 
-- Function URL feature for exposing your Lambdas to the internet via HTTP(S) endpoints
+- Function URL feature for exposing your Lambdas to the internet via HTTP(S) endpoints (easily pluggable into API Gateway V2)
 - Invoke mode support for Function URL: BUFFERED or RESPONSE_STREAM
 - Lambda reserved concurrency and ephemeral storage config
 - CloudFront distribution support for the Function URL origin
@@ -43,17 +43,19 @@ const LambdaNodeJsMiddy = new NodejsFunction(this, 'LambdaNodeJsMiddy', {
   entry: join(__dirname, '..', '..', 'services', 'node-lambda', 'index.ts'),
   handler: 'handler',
   runtime: lambda.Runtime.NODEJS_20_X,
-  memorySize: 3072,
+  memorySize: 1769,
   architecture: lambda.Architecture.ARM_64,
   timeout: Duration.minutes(5),
   reservedConcurrentExecutions: 60,
   environment: {
     IDEMPOTENCY_TABLE_NAME: props.idempotencyTable.tableName,
   },
-  insightsVersion: lambda.LambdaInsightsVersion.VERSION_1_0_229_0,
+  insightsVersion: lambda.LambdaInsightsVersion.fromInsightVersionArn(
+    'arn:aws:lambda:us-east-1:580247275435:layer:LambdaInsightsExtension-Arm64:19'
+  ),
   ephemeralStorageSize: Size.gibibytes(0.5),
   bundling: {
-    minify: true,
+    minify: false,
   },
 });
 ```

@@ -7,7 +7,8 @@ import httpErrorHandler from '@middy/http-error-handler'
 import httpSecurityHeaders from '@middy/http-security-headers'
 import httpRouterHandler from '@middy/http-router'
 import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from 'aws-lambda'
-import { Logger, injectLambdaContext } from '@aws-lambda-powertools/logger'
+import { Logger } from '@aws-lambda-powertools/logger'
+import { injectLambdaContext } from '@aws-lambda-powertools/logger/middleware'
 import { makeHandlerIdempotent } from '@aws-lambda-powertools/idempotency/middleware';
 import { IdempotencyConfig } from '@aws-lambda-powertools/idempotency'
 import { DynamoDBPersistenceLayer } from '@aws-lambda-powertools/idempotency/dynamodb';
