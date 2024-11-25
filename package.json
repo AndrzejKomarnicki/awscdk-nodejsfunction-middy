@@ -9,28 +9,28 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@aws-sdk/client-ssm": "^3.675.0",
+    "@aws-sdk/client-ssm": "^3.699.0",
     "@types/aws-lambda": "^8.10.145",
-    "@types/node": "^20.12.7",
-    "aws-cdk": "^2.162.1",
-    "aws-cdk-lib": "^2.162.1",
+    "@types/node": "^22.9.3",
+    "aws-cdk": "^2.170.0",
+    "aws-cdk-lib": "^2.170.0",
     "constructs": "^10.4.2",
     "esbuild": "0.24.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.7.2"
   },
   "dependencies": {
-    "@aws-lambda-powertools/idempotency": "^2.9.0",
-    "@aws-lambda-powertools/logger": "^2.9.0",
-    "@aws-sdk/client-dynamodb": "^3.675.0",
-    "@aws-sdk/lib-dynamodb": "^3.675.0",
-    "@middy/core": "^5.5.1",
-    "@middy/http-error-handler": "^5.5.1",
-    "@middy/http-event-normalizer": "^5.5.1",
-    "@middy/http-header-normalizer": "^5.5.1",
-    "@middy/http-json-body-parser": "^5.5.1",
-    "@middy/http-router": "^5.5.1",
-    "@middy/http-security-headers": "^5.5.1",
-    "@middy/ssm": "^5.5.1"
+    "@aws-lambda-powertools/idempotency": "^2.11.0",
+    "@aws-lambda-powertools/logger": "^2.11.0",
+    "@aws-sdk/client-dynamodb": "^3.699.0",
+    "@aws-sdk/lib-dynamodb": "^3.699.0",
+    "@middy/core": "^6.0.0",
+    "@middy/http-error-handler": "^6.0.0",
+    "@middy/http-event-normalizer": "^6.0.0",
+    "@middy/http-header-normalizer": "^6.0.0",
+    "@middy/http-json-body-parser": "^6.0.0",
+    "@middy/http-router": "^6.0.0",
+    "@middy/http-security-headers": "^6.0.0",
+    "@middy/ssm": "^6.0.0"
   }
 }

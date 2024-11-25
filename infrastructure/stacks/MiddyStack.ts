@@ -36,7 +36,7 @@ export class MiddyStack extends Stack {
         const LambdaNodeJsMiddy = new NodejsFunction(this, 'LambdaNodeJsMiddy', {
             entry: (join(__dirname, '..', '..', 'services', 'node-lambda', 'index.ts')),
             handler: 'handler',
-            runtime: lambda.Runtime.NODEJS_20_X,
+            runtime: lambda.Runtime.NODEJS_22_X,
             memorySize: 1769,
             architecture: lambda.Architecture.ARM_64,
             timeout: Duration.minutes(5),
